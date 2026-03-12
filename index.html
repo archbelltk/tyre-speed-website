@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tyrespeed - Premium Tyre Shop & Wheel Alignment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'orbitron': ['Orbitron', 'sans-serif'],
+                        'rajdhani': ['Rajdhani', 'sans-serif'],
+                    },
+                    colors: {
+                        'gold': '#d69a4b',
+                        'gold-light': '#e4b56b',
+                        'gold-dark': '#b8823d',
+                        'racing-dark': '#0a0a0a',
+                        'racing-gray': '#141414',
+                        'racing-accent': '#1f1f1f',
+                    },
+                    animation: {
+                        'spin-slow': 'spin 8s linear infinite',
+                        'pulse-gold': 'pulseGold 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'slide-up': 'slideUp 0.8s ease-out forwards',
+                        'shimmer': 'shimmer 2s linear infinite',
+                    },
+                    keyframes: {
+                        slideUp: {
+                            '0%': { transform: 'translateY(50px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        pulseGold: {
+                            '0%, 100%': { boxShadow: '0 0 0 0 rgba(214, 154, 75, 0.4)' },
+                            '50%': { boxShadow: '0 0 0 20px rgba(214, 154, 75, 0)' },
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-200% 0' },
+                            '100%': { backgroundPosition: '200% 0' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0a0a0a;
+            overflow-x: hidden;
+        }
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #d69a4b 0%, #e4b56b 50%, #d69a4b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-size: 200% auto;
+            animation: shimmer 3s linear infinite;
+        }
+        .gold-glow {
+            box-shadow: 0 0 30px rgba(214, 154, 75, 0.3);
+        }
+        .gold-border-glow {
+            box-shadow: 0 0 20px rgba(214, 154, 75, 0.2);
+        }
+        .tyre-tread {
+            background-image: repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 10px,
+                #d69a4b 10px,
+                #d69a4b 12px
+            );
+            opacity: 0.1;
+        }
+        .brand-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(145deg, #141414 0%, #1a1a1a 100%);
+        }
+        .brand-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(214, 154, 75, 0.25);
+            border-color: #d69a4b;
+        }
+        .service-card {
+            background: linear-gradient(135deg, #141414 0%, #1f1f1f 100%);
+            border: 1px solid #2a2a2a;
+            transition: all 0.3s ease;
+        }
+        .service-card:hover {
+            border-color: #d69a4b;
+            transform: translateX(10px);
+            box-shadow: -5px 0 20px rgba(214, 154, 75, 0.1);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #d69a4b 0%, #b8823d 100%);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #e4b56b 0%, #d69a4b 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(214, 154, 75, 0.4);
+        }
+        .btn-outline {
+            border: 2px solid #d69a4b;
+            color: #d69a4b;
+            transition: all 0.3s ease;
+        }
+        .btn-outline:hover {
+            background: #d69a4b;
+            color: #0a0a0a;
+            box-shadow: 0 0 30px rgba(214, 154, 75, 0.3);
+        }
+        .diagonal-clip {
+            clip-path: polygon(0 0, 100% 0, 85% 100%, 0% 100%);
+        }
+        .gold-underline {
+            position: relative;
+        }
+        .gold-underline::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #d69a4b, transparent);
+        }
+        .input-field:focus {
+            border-color: #d69a4b;
+            box-shadow: 0 0 0 3px rgba(214, 154, 75, 0.1);
+        }
+        .floating-badge {
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .counter-gold {
+            background: linear-gradient(180deg, #d69a4b 0%, #b8823d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+<body class="text-white font-rajdhani">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-racing-dark/95 backdrop-blur-md border-b border-gold/20 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-24">
+                <div class="flex items-center space-x-3 group cursor-pointer">
+                    <!-- <div class="relative">
+                        <i class="fas fa-dharmachakra text-gold text-4xl animate-spin-slow group-hover:text-gold-light transition-colors"></i>
+                        <div class="absolute inset-0 bg-gold/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    </div> -->
+                    <div class="flex flex-col">
+                        <img class="w-48" src="./img/ts-logo.png">
+
+                        <!-- <span class="font-orbitron text-2xl font-bold tracking-widest text-white">TYRE<span class="gold-gradient-text">SPEED</span></span>
+                        <span class="text-xs text-gold tracking-[0.3em] uppercase">Shop & Service</span> -->
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-10 items-center">
+                    <a href="#home" class="text-gray-300 hover:text-gold transition-colors font-bold tracking-widest text-sm uppercase relative group">
+                        Home
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all group-hover:w-full"></span>
+                    </a>
+                    <a href="#brands" class="text-gray-300 hover:text-gold transition-colors font-bold tracking-widest text-sm uppercase relative group">
+                        Brands
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all group-hover:w-full"></span>
+                    </a>
+                    <a href="#services" class="text-gray-300 hover:text-gold transition-colors font-bold tracking-widest text-sm uppercase relative group">
+                        Services
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all group-hover:w-full"></span>
+                    </a>
+                    <a href="#contact" class="text-gray-300 hover:text-gold transition-colors font-bold tracking-widest text-sm uppercase relative group">
+                        Contact
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all group-hover:w-full"></span>
+                    </a>
+                    <a href="tel:0719646184" class="btn-primary px-8 py-3 rounded-full font-bold text-racing-dark flex items-center gap-2 animate-pulse-gold">
+                        <i class="fas fa-phone"></i> CALL NOW
+                    </a>
+                </div>
+                <button class="md:hidden text-2xl text-gold hover:text-gold-light transition-colors" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-racing-gray border-t border-gold/20">
+            <div class="px-4 pt-2 pb-6 space-y-1">
+                <a href="#home" class="block py-4 text-gold hover:bg-gold/10 border-b border-gray-800 font-bold tracking-wider">HOME</a>
+                <a href="#brands" class="block py-4 text-gray-300 hover:text-gold hover:bg-gold/10 border-b border-gray-800 font-bold tracking-wider">BRANDS</a>
+                <a href="#services" class="block py-4 text-gray-300 hover:text-gold hover:bg-gold/10 border-b border-gray-800 font-bold tracking-wider">SERVICES</a>
+                <a href="#contact" class="block py-4 text-gray-300 hover:text-gold hover:bg-gold/10 font-bold tracking-wider">CONTACT</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <!-- Background with Overlay -->
+        <div class="absolute inset-0 z-0">
+            <div class="absolute inset-0 bg-gradient-to-br from-racing-dark via-racing-dark/95 to-racing-dark/80 z-10"></div>
+            <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-30"></div>
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(214,154,75,0.1)_0%,_transparent_70%)]"></div>
+            <!-- Animated tyre tread -->
+            <div class="absolute bottom-0 w-full h-32 tyre-tread"></div>
+        </div>
+
+        <!-- Content -->
+        <div class="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-16 items-center pt-24">
+            <div class="space-y-8 animate-slide-up">
+                <div class="inline-flex items-center gap-2 px-4 py-2 border border-gold/30 rounded-full bg-gold/5 backdrop-blur-sm">
+                    <span class="w-2 h-2 bg-gold rounded-full animate-pulse"></span>
+                    <span class="text-gold font-bold text-xs tracking-[0.2em] uppercase">Shop & Service</span>
+                </div>
+                
+                <h1 class="font-orbitron text-5xl md:text-7xl font-black leading-tight">
+                    SPEED MEETS<br>
+                    <span class="gold-gradient-text">EXCELLENCE</span>
+                </h1>
+                
+                <p class="text-xl md:text-2xl text-gray-400 font-light max-w-lg leading-relaxed">
+                    Stockist of world's top tyre brands. Computerised 3D wheel alignment & professional tyre fitment services.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row gap-4 pt-4">
+                    <a href="#contact" class="btn-primary px-10 py-4 rounded-lg font-bold text-lg flex items-center justify-center gap-3 diagonal-clip">
+                        <i class="fas fa-location-arrow"></i> FIND US
+                    </a>
+                    <a href="tel:0719646184" class="btn-outline px-10 py-4 rounded-lg font-bold text-lg flex items-center justify-center gap-3">
+                        <i class="fas fa-phone-alt"></i> 0719 646 184
+                    </a>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="grid grid-cols-3 gap-8 pt-12 border-t border-gold/10">
+                    <div class="text-center md:text-left">
+                        <div class="text-4xl font-orbitron font-bold counter-gold counter" data-target="4">0</div>
+                        <div class="text-sm text-gray-500 uppercase tracking-wider mt-1">Top Brands</div>
+                    </div>
+                    <div class="text-center md:text-left">
+                        <div class="text-4xl font-orbitron font-bold counter-gold counter" data-target="15">0</div>
+                        <div class="text-sm text-gray-500 uppercase tracking-wider mt-1">Years Exp</div>
+                    </div>
+                    <div class="text-center md:text-left">
+                        <div class="text-4xl font-orbitron font-bold counter-gold counter" data-target="1000">0</div>
+                        <div class="text-sm text-gray-500 uppercase tracking-wider mt-1">Clients</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Hero Visual -->
+            <div class="hidden md:block relative">
+                <div class="relative w-full h-[600px] flex items-center justify-center">
+                    <!-- Glow Effect -->
+                    <div class="absolute inset-0 bg-gold/10 rounded-full blur-[100px] animate-pulse"></div>
+                    
+                    <!-- Main Image -->
+                    <div class="relative z-10 transform hover:scale-105 transition-transform duration-700">
+                        <img class="rounded-[12px]" src="./img/man-fitting-a-tyre.jpg" 
+                             alt="Premium Tyre" 
+                             class="w-full h-auto drop-shadow-2xl filter brightness-90 contrast-125">
+                        
+                        <!-- Gold accent ring -->
+                        <div class="absolute -inset-4 border-2 border-gold/20 rounded-full animate-spin-slow pointer-events-none"></div>
+                    </div>
+
+                    <!-- Floating Badges -->
+                    <div class="absolute top-10 right-0 bg-racing-gray/90 backdrop-blur-md border border-gold/30 p-4 rounded-lg floating-badge shadow-xl mr-4">
+                        <i class="fas fa-check-circle text-gold text-2xl mb-1"></i>
+                        <div class="text-xs font-bold text-gold uppercase tracking-wider">3D Alignment</div>
+                    </div>
+                    
+                    <div class="hidden absolute bottom-32 -left-8 bg-gold text-racing-dark p-4 rounded-lg shadow-2xl floating-badge" style="animation-delay: 1s;">
+                        <i class="fas fa-shield-alt text-2xl mb-1"></i>
+                        <div class="text-xs font-bold uppercase tracking-wider">Warranty<br>Included</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-2 opacity-50">
+            <span class="text-xs uppercase tracking-widest text-gold">Scroll</span>
+            <div class="w-6 h-10 border-2 border-gold rounded-full flex justify-center pt-2">
+                <div class="w-1 h-2 bg-gold rounded-full animate-bounce"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Brands Section -->
+    <section id="brands" class="py-32 bg-racing-gray relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gold to-transparent opacity-30"></div>
+        
+        <!-- Background Pattern -->
+        <div class="absolute inset-0 opacity-5">
+            <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, #d69a4b 1px, transparent 0); background-size: 40px 40px;"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-20">
+                <span class="text-gold text-sm font-bold tracking-[0.3em] uppercase mb-4 block">Authorized Dealer</span>
+                <h2 class="font-orbitron text-4xl md:text-6xl font-bold mb-6">
+                    PREMIUM <span class="gold-gradient-text">BRANDS</span>
+                </h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-transparent via-gold to-transparent mx-auto"></div>
+                <p class="text-gray-400 text-lg mt-6 max-w-2xl mx-auto">Stockist of world's top tyre manufacturers. Genuine products with full warranty coverage.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Bridgestone -->
+                <div class="brand-card p-8 rounded-2xl border border-gray-800 group cursor-pointer relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-gold/5 rounded-full blur-3xl group-hover:bg-gold/10 transition-all"></div>
+                    <div class="h-32 flex items-center justify-center mb-6 relative">
+                        <div class="text-3xl font-orbitron font-bold text-white group-hover:text-gold transition-colors tracking-wider">
+                            BRIDGE<span class="text-gold">STONE</span>
+                        </div>
+                    </div>
+                    <div class="text-center relative z-10">
+                        <div class="inline-block px-3 py-1 bg-gold/10 rounded-full text-gold text-xs font-bold tracking-widest mb-3">JAPAN</div>
+                        <p class="text-gray-400 text-sm leading-relaxed">World's largest tyre manufacturer. Premium quality and unmatched durability.</p>
+                    </div>
+                    <div class="absolute bottom-0 left-0 w-full h-1 bg-gold transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+                </div>
+
+                <!-- Dunlop -->
+                <div class="brand-card p-8 rounded-2xl border border-gray-800 group cursor-pointer relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-gold/5 rounded-full blur-3xl group-hover:bg-gold/10 transition-all"></div>
+                    <div class="h-32 flex items-center justify-center mb-6 relative">
+                        <div class="text-3xl font-orbitron font-bold text-white group-hover:text-gold transition-colors tracking-wider">
+                            DUN<span class="text-gold">LOP</span>
+                        </div>
+                    </div>
+                    <div class="text-center relative z-10">
+                        <div class="inline-block px-3 py-1 bg-gold/10 rounded-full text-gold text-xs font-bold tracking-widest mb-3">UK / USA</div>
+                        <p class="text-gray-400 text-sm leading-relaxed">Legendary motorsport heritage. High-performance tyres since 1888.</p>
+                    </div>
+                    <div class="absolute bottom-0 left-0 w-full h-1 bg-gold transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+                </div>
+
+                <!-- Michelin -->
+                <div class="brand-card p-8 rounded-2xl border border-gray-800 group cursor-pointer relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-gold/5 rounded-full blur-3xl group-hover:bg-gold/10 transition-all"></div>
+                    <div class="h-32 flex items-center justify-center mb-6 relative">
+                        <div class="text-3xl font-orbitron font-bold text-white group-hover:text-gold transition-colors tracking-wider">
+                            MICHE<span class="text-gold">LIN</span>
+                        </div>
+                    </div>
+                    <div class="text-center relative z-10">
+                        <div class="inline-block px-3 py-1 bg-gold/10 rounded-full text-gold text-xs font-bold tracking-widest mb-3">FRANCE</div>
+                        <p class="text-gray-400 text-sm leading-relaxed">Innovation leader. Best-in-class safety, longevity, and fuel efficiency.</p>
+                    </div>
+                    <div class="absolute bottom-0 left-0 w-full h-1 bg-gold transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+                </div>
+
+                <!-- Continental -->
+                <div class="brand-card p-8 rounded-2xl border border-gray-800 group cursor-pointer relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-gold/5 rounded-full blur-3xl group-hover:bg-gold/10 transition-all"></div>
+                    <div class="h-32 flex items-center justify-center mb-6 relative">
+                        <div class="text-2xl font-orbitron font-bold text-white group-hover:text-gold transition-colors tracking-wider text-center leading-tight">
+                            CONTI<span class="text-gold">NENTAL</span>
+                        </div>
+                    </div>
+                    <div class="text-center relative z-10">
+                        <div class="inline-block px-3 py-1 bg-gold/10 rounded-full text-gold text-xs font-bold tracking-widest mb-3">GERMANY</div>
+                        <p class="text-gray-400 text-sm leading-relaxed">German engineering excellence. Premium OEM supplier for luxury vehicles.</p>
+                    </div>
+                    <div class="absolute bottom-0 left-0 w-full h-1 bg-gold transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-32 bg-racing-dark relative overflow-hidden">
+        <!-- Decorative Elements -->
+        <div class="absolute top-0 right-0 w-96 h-96 bg-gold/5 rounded-full blur-[120px]"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-gold/5 rounded-full blur-[120px]"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid md:grid-cols-2 gap-20 items-center">
+                <div class="space-y-10">
+                    <div>
+                        <span class="text-gold text-sm font-bold tracking-[0.3em] uppercase mb-4 block">Our Services</span>
+                        <h2 class="font-orbitron text-4xl md:text-6xl font-bold leading-tight">
+                            COMPUTERISED <span class="gold-gradient-text">3D</span><br>
+                            WHEEL ALIGNMENT
+                        </h2>
+                    </div>
+                    
+                    <p class="text-gray-400 text-lg leading-relaxed border-l-2 border-gold/30 pl-6">
+                        State-of-the-art 3D wheel alignment technology ensuring your vehicle handles perfectly. 
+                        Proper alignment extends tyre life, improves fuel efficiency, and ensures maximum safety on the road.
+                    </p>
+                    
+                    <div class="space-y-6">
+                        <div class="service-card p-6 rounded-xl flex items-start space-x-5 group">
+                            <div class="bg-gold/10 p-4 rounded-lg group-hover:bg-gold group-hover:text-racing-dark transition-all duration-300">
+                                <i class="fas fa-crosshairs text-2xl text-gold group-hover:text-racing-dark"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-xl mb-2 text-white group-hover:text-gold transition-colors">Precision Alignment</h3>
+                                <p class="text-gray-500 group-hover:text-gray-400 transition-colors">Computer-controlled accuracy to manufacturer specifications with 3D imaging technology.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="service-card p-6 rounded-xl flex items-start space-x-5 group">
+                            <div class="bg-gold/10 p-4 rounded-lg group-hover:bg-gold group-hover:text-racing-dark transition-all duration-300">
+                                <i class="fas fa-clock text-2xl text-gold group-hover:text-racing-dark"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-xl mb-2 text-white group-hover:text-gold transition-colors">Express Service</h3>
+                                <p class="text-gray-500 group-hover:text-gray-400 transition-colors">Professional fitment while you wait. Comfortable waiting lounge available.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="service-card p-6 rounded-xl flex items-start space-x-5 group">
+                            <div class="bg-gold/10 p-4 rounded-lg group-hover:bg-gold group-hover:text-racing-dark transition-all duration-300">
+                                <i class="fas fa-tools text-2xl text-gold group-hover:text-racing-dark"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-xl mb-2 text-white group-hover:text-gold transition-colors">Tyre Fitment</h3>
+                                <p class="text-gray-500 group-hover:text-gray-400 transition-colors">Expert mounting, balancing, and rotation for all vehicle types and sizes.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="#contact" class="inline-flex items-center gap-2 text-gold font-bold hover:gap-4 transition-all group">
+                        Book Appointment <i class="fas fa-arrow-right group-hover:translate-x-2 transition-transform"></i>
+                    </a>
+                </div>
+
+                <div class="relative">
+                    <div class="relative rounded-2xl overflow-hidden shadow-2xl border border-gold/20 group">
+                        <div class="absolute inset-0 bg-gold/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
+                        <img src="./img/wheel-alignment-3.jpg" 
+                             alt="3D Wheel Alignment" 
+                             class="w-full h-auto hover:scale-110 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-racing-dark via-transparent to-transparent"></div>
+                        
+                        <!-- Tech Badge -->
+                        <div class="absolute bottom-6 left-6 right-6">
+                            <div class="bg-racing-gray/90 backdrop-blur-md border border-gold/30 p-4 rounded-xl flex items-center justify-between">
+                                <div>
+                                    <div class="text-gold text-xs font-bold uppercase tracking-wider mb-1">Latest Technology</div>
+                                    <div class="text-white font-bold">Hunter 3D Alignment</div>
+                                </div>
+                                <div class="w-12 h-12 bg-gold/20 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-cog fa-spin text-gold text-xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Decorative Corner Elements -->
+                    <div class="absolute -top-4 -right-4 w-24 h-24 border-t-2 border-r-2 border-gold/30 rounded-tr-3xl"></div>
+                    <div class="absolute -bottom-4 -left-4 w-24 h-24 border-b-2 border-l-2 border-gold/30 rounded-bl-3xl"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-32 bg-racing-gray relative overflow-hidden">
+        <!-- Background Pattern -->
+        <div class="absolute inset-0 opacity-5">
+            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16">
+                <span class="text-gold text-sm font-bold tracking-[0.3em] uppercase mb-4 block">Get In Touch</span>
+                <h2 class="font-orbitron text-4xl md:text-6xl font-bold">
+                    VISIT <span class="gold-gradient-text">US</span>
+                </h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-16">
+                <!-- Contact Info -->
+                <div class="space-y-8">
+                    <div class="grid gap-6">
+                        <div class="flex items-start space-x-5 group p-6 rounded-xl bg-racing-dark/50 border border-gray-800 hover:border-gold/30 transition-all">
+                            <div class="bg-gold/10 p-4 rounded-lg group-hover:bg-gold group-hover:scale-110 transition-all duration-300">
+                                <i class="fas fa-map-marker-alt text-2xl text-gold group-hover:text-racing-dark"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg mb-1 text-gold uppercase tracking-wider">Address</h3>
+                                <p class="text-gray-300 text-lg leading-relaxed">20 McClerry Avenue,<br>Corner R. Mugabe & Enterprise Road</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-5 group p-6 rounded-xl bg-racing-dark/50 border border-gray-800 hover:border-gold/30 transition-all">
+                            <div class="bg-gold/10 p-4 rounded-lg group-hover:bg-gold group-hover:scale-110 transition-all duration-300">
+                                <i class="fas fa-phone-alt text-2xl text-gold group-hover:text-racing-dark"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg mb-1 text-gold uppercase tracking-wider">Phone</h3>
+                                <p class="text-gray-300 text-lg">
+                                    <a href="tel:0719646184" class="hover:text-gold transition-colors block mb-1">0719 646 184</a>
+                                    <a href="tel:0773646184" class="hover:text-gold transition-colors block">0773 646 184</a>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-5 group p-6 rounded-xl bg-racing-dark/50 border border-gray-800 hover:border-gold/30 transition-all">
+                            <div class="bg-gold/10 p-4 rounded-lg group-hover:bg-gold group-hover:scale-110 transition-all duration-300">
+                                <i class="fas fa-envelope text-2xl text-gold group-hover:text-racing-dark"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg mb-1 text-gold uppercase tracking-wider">Email</h3>
+                                <a href="mailto:sales@tyrespeed.co.zw" class="text-gray-300 text-lg hover:text-gold transition-colors">
+                                    sales@tyrespeed.co.zw
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-5 group p-6 rounded-xl bg-racing-dark/50 border border-gray-800 hover:border-gold/30 transition-all">
+                            <div class="bg-gold/10 p-4 rounded-lg group-hover:bg-gold group-hover:scale-110 transition-all duration-300">
+                                <i class="fas fa-clock text-2xl text-gold group-hover:text-racing-dark"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg mb-1 text-gold uppercase tracking-wider">Business Hours</h3>
+                                <div class="text-gray-300 space-y-1">
+                                    <div class="flex justify-between gap-8">
+                                        <span>Mon - Fri:</span>
+                                        <span class="text-white">08:00 - 17:00</span>
+                                    </div>
+                                    <div class="flex justify-between gap-8">
+                                        <span>Saturday:</span>
+                                        <span class="text-white">08:00 - 13:00</span>
+                                    </div>
+                                    <div class="flex justify-between gap-8">
+                                        <span>Sunday:</span>
+                                        <span class="text-gold">Closed</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Social Links -->
+                    <div class="flex space-x-4 pt-4">
+                        <a href="#" class="w-14 h-14 bg-racing-dark border border-gray-700 rounded-full flex items-center justify-center hover:bg-gold hover:border-gold hover:text-racing-dark transition-all transform hover:scale-110 group">
+                            <i class="fab fa-facebook-f text-xl group-hover:scale-110 transition-transform"></i>
+                        </a>
+                        <a href="#" class="w-14 h-14 bg-racing-dark border border-gray-700 rounded-full flex items-center justify-center hover:bg-gold hover:border-gold hover:text-racing-dark transition-all transform hover:scale-110 group">
+                            <i class="fab fa-whatsapp text-xl group-hover:scale-110 transition-transform"></i>
+                        </a>
+                        <a href="#" class="w-14 h-14 bg-racing-dark border border-gray-700 rounded-full flex items-center justify-center hover:bg-gold hover:border-gold hover:text-racing-dark transition-all transform hover:scale-110 group">
+                            <i class="fab fa-instagram text-xl group-hover:scale-110 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Contact Form -->
+                <div class="bg-racing-dark p-8 md:p-10 rounded-2xl border border-gray-800 shadow-2xl relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-gold/5 rounded-full blur-[80px] -mr-32 -mt-32"></div>
+                    
+                    <h3 class="font-orbitron text-2xl font-bold mb-8 relative z-10">SEND US A MESSAGE</h3>
+                    <form class="space-y-6 relative z-10" onsubmit="handleSubmit(event)">
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-bold mb-2 text-gray-400 uppercase tracking-wider">Your Name</label>
+                                <input type="text" class="input-field w-full bg-racing-gray border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none transition-all" placeholder="John Doe" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold mb-2 text-gray-400 uppercase tracking-wider">Phone</label>
+                                <input type="tel" class="input-field w-full bg-racing-gray border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none transition-all" placeholder="0719 646 184" required>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold mb-2 text-gray-400 uppercase tracking-wider">Email</label>
+                            <input type="email" class="input-field w-full bg-racing-gray border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none transition-all" placeholder="john@example.com">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold mb-2 text-gray-400 uppercase tracking-wider">Message</label>
+                            <textarea rows="4" class="input-field w-full bg-racing-gray border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none transition-all resize-none" placeholder="How can we help you?" required></textarea>
+                        </div>
+                        <button type="submit" class="w-full btn-primary text-racing-dark font-bold py-4 rounded-lg flex items-center justify-center gap-3 text-lg">
+                            <i class="fas fa-paper-plane"></i> SEND MESSAGE
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-racing-dark border-t border-gold/10 py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-8">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-dharmachakra text-gold text-4xl"></i>
+                    <div class="flex flex-col">
+                        <span class="font-orbitron text-2xl font-bold tracking-wider text-white">TYRE<span class="text-gold">SPEED</span></span>
+                        <span class="text-xs text-gray-500 tracking-[0.2em] uppercase">Premium Tyre Shop</span>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col md:flex-row items-center gap-8 text-center md:text-right">
+                    <div class="text-gray-500 text-sm">
+                        <p>&copy; 2024 Tyrespeed Shop Service. All rights reserved.</p>
+                        <p class="mt-1">20 McClerry Avenue, Cnr R. Mugabe & Enterprise Rd</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-12 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-600">
+                <div class="flex gap-6">
+                    <a href="#" class="hover:text-gold transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-gold transition-colors">Terms of Service</a>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span>Designed with</span>
+                    <i class="fas fa-bolt text-gold"></i>
+                    <span>for speed</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Call Button (Mobile) -->
+    <a href="tel:0719646184" class="md:hidden fixed bottom-6 right-6 bg-gold text-racing-dark w-16 h-16 rounded-full flex items-center justify-center shadow-2xl z-50 animate-pulse-gold">
+        <i class="fas fa-phone-alt text-2xl"></i>
+    </a>
+
+    <script>
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Smooth Scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    document.getElementById('mobile-menu').classList.add('hidden');
+                }
+            });
+        });
+
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('shadow-lg', 'shadow-gold/5');
+            } else {
+                navbar.classList.remove('shadow-lg', 'shadow-gold/5');
+            }
+        });
+
+        // Counter Animation
+        const counters = document.querySelectorAll('.counter');
+        const speed = 200;
+
+        const animateCounters = () => {
+            counters.forEach(counter => {
+                const target = +counter.getAttribute('data-target');
+                const count = +counter.innerText;
+                const inc = target / speed;
+
+                if (count < target) {
+                    counter.innerText = Math.ceil(count + inc);
+                    setTimeout(animateCounters, 20);
+                } else {
+                    counter.innerText = target + (target === 1000 ? '+' : '+');
+                }
+            });
+        };
+
+        // Intersection Observer for counters
+        const observerOptions = { threshold: 0.5 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounters();
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        const statsSection = document.querySelector('.counter').parentElement.parentElement;
+        if (statsSection) observer.observe(statsSection);
+
+        // Form Submission
+        function handleSubmit(e) {
+            e.preventDefault();
+            
+            // Create toast notification
+            const toast = document.createElement('div');
+            toast.className = 'fixed top-24 right-4 bg-gold text-racing-dark px-6 py-4 rounded-lg shadow-2xl z-50 transform translate-x-full transition-transform duration-300 flex items-center gap-3 font-bold';
+            toast.innerHTML = '<i class="fas fa-check-circle text-xl"></i> Message sent successfully!';
+            document.body.appendChild(toast);
+            
+            setTimeout(() => toast.classList.remove('translate-x-full'), 100);
+            setTimeout(() => {
+                toast.classList.add('translate-x-full');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+            
+            e.target.reset();
+        }
+
+        // Parallax Effect
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallaxElements = document.querySelectorAll('.parallax');
+            parallaxElements.forEach(el => {
+                const speed = el.dataset.speed || 0.5;
+                el.style.transform = `translateY(${scrolled * speed}px)`;
+            });
+        });
+    </script>
+</body>
+</html>
